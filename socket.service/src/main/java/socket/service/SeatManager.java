@@ -64,16 +64,17 @@ public class SeatManager {
 		return Seats.get(row-1).get(coloumn-1).LockId;
 	}
 	
-	public void  unlockSeat(String lockId) throws Exception {
+	public Seat  unlockSeat(String lockId) throws Exception {
 		Seat seat = getSeat(lockId);
 		seat.Status = SeatStatus.free;
 		seat.LockId = "";
-		return;
+		return seat;
 	}
 	
-	public void reserveSeat(String lockId) throws Exception {
+	public Seat reserveSeat(String lockId) throws Exception {
 
 		Seat seat = getSeat(lockId);
 		seat.Status = SeatStatus.reserved;
+		return seat;
 	}
 }

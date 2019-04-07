@@ -52,7 +52,7 @@
         	ws = new WebSocket(wsUrl);
         	
         	ws.onopen = function(event) {
-        		ws.send(JSON.stringify({type: "initRoom", rows: +rowCount, columns: +colCount}));
+        		//ws.send(JSON.stringify({type: "initRoom", rows: +rowCount, columns: +colCount}));
         	}
         	
 			ws.onerror = function(event) {
@@ -72,7 +72,7 @@
         	message = JSON.parse(message);
         	switch(message.type){
         		case "error": alert(message.message); break;
-        		case "seatStatus": drawSeat(message.row, message.column, message.status);break;
+        		case "seatStatus": drawSeat(message.row-1, message.column-1, message.status);break;
         		case "lockResult": lockSeat(message.lockId);break;
         		case "roomSize": setRoomSize(message);break;
         	}
@@ -116,6 +116,8 @@
 
         // Kirajzol egy széket a canvas-re:
         function drawSeat(row, col, status) {
+        	row = row;
+        	col = col;
             context.beginPath();
             switch (status) {
                 case "free": context.fillStyle = 'green'; break;
@@ -145,14 +147,14 @@
                 	ws.send(JSON.stringify({type: "unlockSeat", lockId}));
                 	drawSeat(row, col, "locked");
                 	selectedSeat = { row: row, column: col };
-                	ws.send(JSON.stringify({type: "lockSeat", row: selectedSeat.row, column: selectedSeat.column}));
+                	ws.send(JSON.stringify({type: "lockSeat", row: selectedSeat.row+1, column: selectedSeat.column+1}));
                 }
                 
             } else {
             	selectedSeat = { row: row, column: col };
                 // TODO: ez az új szék, ezt kell zárolni
                 drawSeat(row, col, "locked");
-                ws.send(JSON.stringify({type: "lockSeat", row: selectedSeat.row, column: selectedSeat.column}));
+                ws.send(JSON.stringify({type: "lockSeat", row: selectedSeat.row+1, column: selectedSeat.column+1}));
             }
         }
 

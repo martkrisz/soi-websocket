@@ -91,9 +91,7 @@ public class Endpoint {
 		case "unlockSeat":
 			if(msg.containsKey("lockId"))
 			{
-				seatManager.unlockSeat(msg.getString("lockId"));
-						
-				Seat seat = seatManager.getSeat(msg.getString("lockId"));
+				Seat seat = seatManager.unlockSeat(msg.getString("lockId"));
 				reply = Json.createObjectBuilder()
 						.add("type", "seatStatus")
 						.add("row", seat.Row)
@@ -107,9 +105,7 @@ public class Endpoint {
 		case "reserveSeat":
 			if(msg.containsKey("lockId"))
 			{
-				seatManager.reserveSeat(msg.getString("lockId"));
-						
-				Seat seat = seatManager.getSeat(msg.getString("lockId"));
+				Seat seat = seatManager.reserveSeat(msg.getString("lockId"));
 				reply = Json.createObjectBuilder()
 						.add("type", "seatStatus")
 						.add("row", seat.Row)
