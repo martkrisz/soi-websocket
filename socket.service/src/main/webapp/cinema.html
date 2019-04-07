@@ -30,6 +30,8 @@
             canvas.addEventListener('click', function (evt) { mousePos = getMousePos(canvas, evt); selectSeat(); });
             context = canvas.getContext('2d');
             initCanvas();
+            lockId = null;
+            selectedSeat = null;
         }
         
         function initCanvas() {
@@ -125,15 +127,15 @@
                 	ws.send({type: "unlockSeat", lockId})
                 	drawSeat(row, col, "locked");
                 	selectedSeat = { row: row, column: col };
-                	ws.send({type: "unlockSeat", row: selectedSeat.row, column: selectedSeat.column});
+                	ws.send({type: "lockSeat", row: selectedSeat.row, column: selectedSeat.column});
                 }
                 
             } else {
             	selectedSeat = { row: row, column: col };
                 // TODO: ez az új szék, ezt kell zárolni
                 drawSeat(row, col, "locked");
+                ws.send({type: "lockSeat", row: selectedSeat.row, column: selectedSeat.column});
             }
-            console.log(selectedSeat);
         }
 
         // Megadja az egér pozícióját a canvas-en belül:
