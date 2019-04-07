@@ -125,8 +125,13 @@ public class Endpoint {
 	}
 	
 	@OnError
-	public void error(Throwable t) {
+	public void error(Session session,Throwable t) throws IOException, EncodeException {
 		System.out.println("WebSocket error: " + t.getMessage());
+		JsonObject reply = Json.createObjectBuilder()
+				.add("type", "error")
+				.add("message", t.getMessage())
+				.build();
+		session.getBasicRemote().sendObject(reply.toString());
 	}
 	
 	
