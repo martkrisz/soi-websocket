@@ -28,7 +28,7 @@ public class Endpoint {
 	
 	
 	@OnMessage
-	public void message(Session session, String message) throws IOException, EncodeException {
+	public void message(Session session, String message) throws Exception {
 		System.out.println("WebSocket message: " + message);
 		JsonObject msg = parser.getJsonObject(message);
 		String type = msg.getString("type");
@@ -68,12 +68,56 @@ public class Endpoint {
 			break;
 
 		case "lockSeat":
+			if(!msg.isNull("row") && !msg.isNull("coloum"))
+			{
+				String id = seatManager.lockSeat(msg.getInt("row"), msg.getInt("coloum"));
+				reply = Json.createObjectBuilder()
+						.add("type", "lockResult")
+						.add("lockId", id)
+						.build();
+				session.getBasicRemote().sendObject(reply.toString());
+						
+				Seat seat = seatManager.getSeat(msg.getInt("row"), msg.getInt("coloum"));
+				reply = Json.createObjectBuilder()
+						.add("type", "seatStatus")
+						.add("row", seat.Row)
+						.add("coloum", seat.Coloumn)
+						.add("status", seat.Status.toString())
+						.build();
+				broadcast(reply.toString());
+			}
 			break;
 
 		case "unlockSeat":
+			if(!msg.isNull("lockId"))
+			{
+				seatManager.unlockSeat(msg.getString("lockId"));
+						
+				Seat seat = seatManager.getSeat(msg.getString("lockId"));
+				reply = Json.createObjectBuilder()
+						.add("type", "seatStatus")
+						.add("row", seat.Row)
+						.add("coloum", seat.Coloumn)
+						.add("status", seat.Status.toString())
+						.build();
+				broadcast(reply.toString());
+			}
 			break;
 
 		case "reserveSeat":
+			if(!msg.isNull("lockId"))
+			{
+				seatManager.reserveSeat(msg.getString("lockId"));
+						
+				Seat seat = seatManager.getSeat(msg.getString("lockId"));
+				reply = Json.createObjectBuilder()
+						.add("type", "seatStatus")
+						.add("row", seat.Row)
+						.add("coloum", seat.Coloumn)
+						.add("status", seat.Status.toString())
+						.build();
+				broadcast(reply.toString());
+			}
 			break;
 		
 		}
