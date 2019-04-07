@@ -2,11 +2,11 @@ package socket.service;
 
 public class RoomSize {
 	public int Rows = 0;
-	public int Coloumns =0;
+	public int Columns =0;
 	
-	public RoomSize (int rows, int coloumns)
+	public RoomSize (int rows, int columns)
 	{
 		Rows = rows;
-		Coloumns = coloumns;
+		Columns = columns;
 	}
 }

@@ -36,9 +36,9 @@ public class Endpoint {
 		switch(type)
 		{
 		case "initRoom":
-			if(true)
+			if(msg.containsKey("rows") && msg.containsKey("columns"))
 			{
-				seatManager.initRoom(msg.getInt("rows"), msg.getInt("coloums"));
+				seatManager.initRoom(msg.getInt("rows"), msg.getInt("columns"));
 			}
 			break;
 
@@ -47,7 +47,7 @@ public class Endpoint {
 			reply = Json.createObjectBuilder()
 			.add("type", "roomSize")
 			.add("rows", room.Rows)
-			.add("coloums", room.Coloumns)
+			.add("columns", room.Columns)
 			.build();
 			session.getBasicRemote().sendObject(reply.toString());
 			break;
@@ -59,7 +59,7 @@ public class Endpoint {
 					reply = Json.createObjectBuilder()
 							.add("type", "seatStatus")
 							.add("row", seat.Row)
-							.add("coloum", seat.Coloumn)
+							.add("column", seat.Column)
 							.add("status", seat.Status.toString())
 							.build();
 							session.getBasicRemote().sendObject(reply.toString());
@@ -68,20 +68,20 @@ public class Endpoint {
 			break;
 
 		case "lockSeat":
-			if(!msg.isNull("row") && !msg.isNull("coloum"))
+			if(msg.containsKey("row") && msg.containsKey("column"))
 			{
-				String id = seatManager.lockSeat(msg.getInt("row"), msg.getInt("coloum"));
+				String id = seatManager.lockSeat(msg.getInt("row"), msg.getInt("column"));
 				reply = Json.createObjectBuilder()
 						.add("type", "lockResult")
 						.add("lockId", id)
 						.build();
 				session.getBasicRemote().sendObject(reply.toString());
 						
-				Seat seat = seatManager.getSeat(msg.getInt("row"), msg.getInt("coloum"));
+				Seat seat = seatManager.getSeat(msg.getInt("row"), msg.getInt("column"));
 				reply = Json.createObjectBuilder()
 						.add("type", "seatStatus")
 						.add("row", seat.Row)
-						.add("coloum", seat.Coloumn)
+						.add("coloum", seat.Column)
 						.add("status", seat.Status.toString())
 						.build();
 				broadcast(reply.toString());
@@ -89,7 +89,7 @@ public class Endpoint {
 			break;
 
 		case "unlockSeat":
-			if(!msg.isNull("lockId"))
+			if(msg.containsKey("lockId"))
 			{
 				seatManager.unlockSeat(msg.getString("lockId"));
 						
@@ -97,7 +97,7 @@ public class Endpoint {
 				reply = Json.createObjectBuilder()
 						.add("type", "seatStatus")
 						.add("row", seat.Row)
-						.add("coloum", seat.Coloumn)
+						.add("column", seat.Column)
 						.add("status", seat.Status.toString())
 						.build();
 				broadcast(reply.toString());
@@ -105,7 +105,7 @@ public class Endpoint {
 			break;
 
 		case "reserveSeat":
-			if(!msg.isNull("lockId"))
+			if(msg.containsKey("lockId"))
 			{
 				seatManager.reserveSeat(msg.getString("lockId"));
 						
@@ -113,7 +113,7 @@ public class Endpoint {
 				reply = Json.createObjectBuilder()
 						.add("type", "seatStatus")
 						.add("row", seat.Row)
-						.add("coloum", seat.Coloumn)
+						.add("column", seat.Column)
 						.add("status", seat.Status.toString())
 						.build();
 				broadcast(reply.toString());

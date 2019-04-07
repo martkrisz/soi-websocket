@@ -8,7 +8,7 @@ public class Parser {
 	public JsonObject getJsonObject(String message) {
 		message.replaceAll("\r?\n", "");
 		JsonReader reader = Json.createReader(new StringReader(message));
-		JsonObject result = reader.readValue().asJsonObject();
+		JsonObject result = reader.readObject();
 		reader.close();
 		return result;
 	}
