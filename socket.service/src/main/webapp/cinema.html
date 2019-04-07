@@ -39,6 +39,11 @@
             colCount = document.getElementById("columns").value;
 			draw();
         }
+        
+        function initButton() {
+        	initCanvas();
+        	ws.send(JSON.stringify({type: "initRoom", rows: rowCount, columns: colCount}));
+        }
 
         // TODO: ide jöhetnek a WebSocket kezeléssel kapcsolatos függvények
         
@@ -47,7 +52,7 @@
         	ws = new WebSocket(wsUrl);
         	
         	ws.onopen = function(event) {
-        		ws.send({type: "initRoom", rows: rowCount, columns: colCount});
+        		ws.send(JSON.stringify({type: "initRoom", rows: rowCount, columns: colCount}));
         	}
         	
 			ws.onerror = function(event) {
@@ -58,11 +63,13 @@
 			}
 			
 			ws.onmessage = function(message) {
-				onMessage(messsage);
+				console.log(message);
+				onMessage(messsage.data);
 			}
         }
         
         function onMessage(message) {
+        	console.log(message);
         	message = JSON.parse(message);
         	switch(message.type){
         		case "error": alert(message.message); break;
@@ -79,6 +86,10 @@
             colCount = message.columns;
             draw();
             updateSeats();
+        }
+        
+        function getRoomSize() {
+        	ws.send(JSON.stringify({type:"getRoomSize"}));
         }
         
         function updateSeats() {
@@ -124,21 +135,21 @@
                 // TODO: ez a régi zárolt szék, ennek a zárolását fel kell oldani
                 if (selectedSeat.row === row && selectedSeat.column === col){
                 	drawSeat(selectedSeat.row, selectedSeat.column, "free");
-                	ws.send({type: "unlockSeat", lockId})
+                	ws.send(JSON.stringify({type: "unlockSeat", lockId}));
                 	selectedSeat = null;
                 } else {
                 	drawSeat(selectedSeat.row, selectedSeat.column, "free");
-                	ws.send({type: "unlockSeat", lockId})
+                	ws.send(JSON.stringify({type: "unlockSeat", lockId}));
                 	drawSeat(row, col, "locked");
                 	selectedSeat = { row: row, column: col };
-                	ws.send({type: "lockSeat", row: selectedSeat.row, column: selectedSeat.column});
+                	ws.send(JSON.stringify({type: "lockSeat", row: selectedSeat.row, column: selectedSeat.column}));
                 }
                 
             } else {
             	selectedSeat = { row: row, column: col };
                 // TODO: ez az új szék, ezt kell zárolni
                 drawSeat(row, col, "locked");
-                ws.send({type: "lockSeat", row: selectedSeat.row, column: selectedSeat.column});
+                ws.send(JSON.stringify({type: "lockSeat", row: selectedSeat.row, column: selectedSeat.column}));
             }
         }
 
@@ -166,14 +177,14 @@
     <div style="text-align: center;">
         <!-- Az alábbi gomb hatására le kell kérdezni a moziterem méretét és az összes szék
             státuszát, és ki kell rajzolni a székeket a canvas-re. -->
-        <input id="refreshButton" value="Refresh" type="button" onclick="updateSeats()"/><br />
+        <input id="refreshButton" value="Refresh" type="button" onclick="getRoomSize()"/><br />
         <!-- Az alábbi input mezőben megadható a moziterem sorainak száma: -->
         <label for="rows">row count:</label><input id="rows" name="rows" value="10" type="text" size="5"/>
         <!-- Az alábbi input mezőben megadható a moziterem oszlopainak száma: -->
         <label for="columns">column count:</label><input id="columns" name="columns" value="20" type="text" size="5"/>
         <!-- Az alábbi gombnak az előző két mezőben megadott értékekkel kell inicializálnia
             a mozitermet: -->
-        <input id="initButton" value="Init" type="button" onclick="initCanvas()"/><br />
+        <input id="initButton" value="Init" type="button" onclick="initButton()"/><br />
         <!-- Az alábbi gombnak le kell foglalnia az éppen aktuálisan zárolt széket: -->
         <input id="reserveButton" value="Reserve" type="button" onclick="reserveSeat()"/><br />
         <!-- Ez a canvas, ide lesznek kirajzolva a székek: -->
