@@ -90,6 +90,7 @@ public class Endpoint {
 		for (Session session : sessions) {
 			session.getBasicRemote().sendObject(message);
 		};   
+
 	}
 	
 	public void initRoom(Integer row, Integer col) {
