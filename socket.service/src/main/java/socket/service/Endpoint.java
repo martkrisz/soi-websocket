@@ -36,7 +36,7 @@ public class Endpoint {
 		switch(type)
 		{
 		case "initRoom":
-			if(!msg.isNull("rows") && !msg.isNull("coloums"))
+			if(true)
 			{
 				seatManager.initRoom(msg.getInt("rows"), msg.getInt("coloums"));
 			}

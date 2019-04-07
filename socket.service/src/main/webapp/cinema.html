@@ -42,7 +42,7 @@
         
         function initButton() {
         	initCanvas();
-        	ws.send(JSON.stringify({type: "initRoom", rows: rowCount, columns: colCount}));
+        	ws.send(JSON.stringify({type: "initRoom", rows: +rowCount, columns: +colCount}));
         }
 
         // TODO: ide jöhetnek a WebSocket kezeléssel kapcsolatos függvények
@@ -52,7 +52,7 @@
         	ws = new WebSocket(wsUrl);
         	
         	ws.onopen = function(event) {
-        		ws.send(JSON.stringify({type: "initRoom", rows: rowCount, columns: colCount}));
+        		ws.send(JSON.stringify({type: "initRoom", rows: +rowCount, columns: +colCount}));
         	}
         	
 			ws.onerror = function(event) {
@@ -63,8 +63,7 @@
 			}
 			
 			ws.onmessage = function(message) {
-				console.log(message);
-				onMessage(messsage.data);
+				onMessage(message.data);
 			}
         }
         
