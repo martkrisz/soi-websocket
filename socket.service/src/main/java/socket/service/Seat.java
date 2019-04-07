@@ -3,7 +3,7 @@ package socket.service;
 public class Seat {
 	public int Row = -1;
 	public int Coloumn = -1;
-	public SeatStatus Status =  SeatStatus.Free;
+	public SeatStatus Status =  SeatStatus.free;
 	public String LockId = "";
 	
 	
@@ -11,7 +11,7 @@ public class Seat {
 	{
 		Row = row;
 		Coloumn = coloumn;
-		Status = SeatStatus.Free;
+		Status = SeatStatus.free;
 		LockId = "";
 	}
 }

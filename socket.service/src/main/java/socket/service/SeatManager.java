@@ -3,8 +3,8 @@ package socket.service;
 import java.util.ArrayList;
 
 public class SeatManager {
-	static private ArrayList<ArrayList<Seat>> Seats;
-	static private int lockId = 1;
+	private ArrayList<ArrayList<Seat>> Seats;
+	private int lockId = 1;
 	int Rows = -1;
 	int Coloumns = -1;
 
@@ -29,18 +29,18 @@ public class SeatManager {
 		return Seats;
 	}
 	
-	public boolean lockSeat(int row, int coloumn) {
+	public String lockSeat(int row, int coloumn) throws Exception {
 		if(Seats.size()<row)
-			return false;
+			throw new Exception("Invalid row!");
 		ArrayList<Seat> col = Seats.get(row);
 		if(col.size()<coloumn)
-			return false;
+			throw new Exception("Invalid coloumn!");
 		Seat seat = col.get(coloumn);
-		if(seat.Status != SeatStatus.Free)
-			return false;
-		seat.Status = SeatStatus.Locked;
+		if(seat.Status != SeatStatus.free)
+			throw new Exception("Seat is not free!");
+		seat.Status = SeatStatus.locked;
 		seat.LockId = "Lock" + Integer.toString(lockId++);
-		return true;
+		return seat.LockId;
 	}
 	
 	public String getLockId(int row, int coloumn)
@@ -48,32 +48,34 @@ public class SeatManager {
 		return Seats.get(row).get(coloumn).LockId;
 	}
 	
-	public boolean unlockSeat(String lockid) {
+	public void  unlockSeat(String lockid) throws Exception {
 		for (ArrayList<Seat> rows : Seats) {
 			for (Seat seat : rows) {
-				if(seat.Status == SeatStatus.Locked && seat.LockId.equals(lockid))
+				if(seat.Status == SeatStatus.locked && seat.LockId.equals(lockid))
 				{
-					seat.Status = SeatStatus.Free;
+					seat.Status = SeatStatus.free;
 					seat.LockId = "";
-					return true;
+					return;
 				}
 			}
 			
 		}
-		return false;
+
+		throw new Exception("LockId not exits!");
 	}
 	
-	public boolean reserveSeat(String lockid) {
+	public void reserveSeat(String lockid) throws Exception {
 		for (ArrayList<Seat> rows : Seats) {
 			for (Seat seat : rows) {
-				if(seat.Status == SeatStatus.Locked && seat.LockId.equals(lockid))
+				if(seat.Status == SeatStatus.locked && seat.LockId.equals(lockid))
 				{
-					seat.Status = SeatStatus.Reserved;
-					return true;
+					seat.Status = SeatStatus.reserved;
+					return;
 				}
 			}
 			
 		}
-		return false;
+
+		throw new Exception("LockId not exits!");
 	}
 }
