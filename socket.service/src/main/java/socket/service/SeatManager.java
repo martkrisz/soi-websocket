@@ -29,13 +29,29 @@ public class SeatManager {
 		return Seats;
 	}
 	
-	public String lockSeat(int row, int coloumn) throws Exception {
+	public Seat getSeat(int row, int coloumn) throws Exception {
 		if(Seats.size()<row)
 			throw new Exception("Invalid row!");
 		ArrayList<Seat> col = Seats.get(row);
 		if(col.size()<coloumn)
 			throw new Exception("Invalid coloumn!");
-		Seat seat = col.get(coloumn);
+		return col.get(coloumn);
+	}
+	
+	public Seat getSeat(String lockId) throws Exception {
+		for (ArrayList<Seat> rows : Seats) {
+			for (Seat seat : rows) {
+				if(seat.Status == SeatStatus.locked && seat.LockId.equals(lockId))
+					return seat;
+			}
+			
+		}
+
+		throw new Exception("LockId not exits!");
+	}
+	
+	public String lockSeat(int row, int coloumn) throws Exception {
+		Seat seat = getSeat(row, coloumn);
 		if(seat.Status != SeatStatus.free)
 			throw new Exception("Seat is not free!");
 		seat.Status = SeatStatus.locked;
@@ -48,34 +64,16 @@ public class SeatManager {
 		return Seats.get(row).get(coloumn).LockId;
 	}
 	
-	public void  unlockSeat(String lockid) throws Exception {
-		for (ArrayList<Seat> rows : Seats) {
-			for (Seat seat : rows) {
-				if(seat.Status == SeatStatus.locked && seat.LockId.equals(lockid))
-				{
-					seat.Status = SeatStatus.free;
-					seat.LockId = "";
-					return;
-				}
-			}
-			
-		}
-
-		throw new Exception("LockId not exits!");
+	public void  unlockSeat(String lockId) throws Exception {
+		Seat seat = getSeat(lockId);
+		seat.Status = SeatStatus.free;
+		seat.LockId = "";
+		return;
 	}
 	
-	public void reserveSeat(String lockid) throws Exception {
-		for (ArrayList<Seat> rows : Seats) {
-			for (Seat seat : rows) {
-				if(seat.Status == SeatStatus.locked && seat.LockId.equals(lockid))
-				{
-					seat.Status = SeatStatus.reserved;
-					return;
-				}
-			}
-			
-		}
+	public void reserveSeat(String lockId) throws Exception {
 
-		throw new Exception("LockId not exits!");
+		Seat seat = getSeat(lockId);
+		seat.Status = SeatStatus.reserved;
 	}
 }
