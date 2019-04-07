@@ -30,18 +30,18 @@ public class SeatManager {
 	}
 	
 	public Seat getSeat(int row, int coloumn) throws Exception {
-		if(Seats.size()<row)
+		if(Seats.size()<row-1)
 			throw new Exception("Invalid row!");
-		ArrayList<Seat> col = Seats.get(row);
-		if(col.size()<coloumn)
+		ArrayList<Seat> col = Seats.get(row-1);
+		if(col.size()<coloumn-1)
 			throw new Exception("Invalid coloumn!");
-		return col.get(coloumn);
+		return col.get(coloumn-1);
 	}
 	
 	public Seat getSeat(String lockId) throws Exception {
 		for (ArrayList<Seat> rows : Seats) {
 			for (Seat seat : rows) {
-				if(seat.Status == SeatStatus.locked && seat.LockId.equals(lockId))
+				if(seat.Status.equals(SeatStatus.locked) && seat.LockId.equals(lockId))
 					return seat;
 			}
 			
@@ -61,7 +61,7 @@ public class SeatManager {
 	
 	public String getLockId(int row, int coloumn)
 	{
-		return Seats.get(row).get(coloumn).LockId;
+		return Seats.get(row-1).get(coloumn-1).LockId;
 	}
 	
 	public void  unlockSeat(String lockId) throws Exception {

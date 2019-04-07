@@ -81,7 +81,7 @@ public class Endpoint {
 				reply = Json.createObjectBuilder()
 						.add("type", "seatStatus")
 						.add("row", seat.Row)
-						.add("coloum", seat.Column)
+						.add("column", seat.Column)
 						.add("status", seat.Status.toString())
 						.build();
 				broadcast(reply.toString());
