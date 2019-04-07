@@ -73,9 +73,13 @@
         	switch(message.type){
         		case "error": alert(message.message); break;
         		case "seatStatus": drawSeat(message.row, message.column, message.status);break;
-        		case "lockResult": break;
+        		case "lockResult": lockSeat(message.lockId);break;
         		case "roomSize": setRoomSize(message);break;
         	}
+        }
+        
+        function lockSeat(_lockId) {
+        	lockId = _lockId;
         }
         
         function setRoomSize(message) {
