@@ -38,7 +38,6 @@
         	rowCount = document.getElementById("rows").value;
             colCount = document.getElementById("columns").value;
 			draw();
-			ws.send({type: "initRoom", rows: rowCount, columns: colCount});
         }
 
         // TODO: ide jöhetnek a WebSocket kezeléssel kapcsolatos függvények
@@ -46,6 +45,11 @@
         function initWebSocket() {
         	wsUrl = getRootUri() + "/WebSocket_XTDN9G/cinema";
         	ws = new WebSocket(wsUrl);
+        	
+        	ws.onopen = function(event) {
+        		ws.send({type: "initRoom", rows: rowCount, columns: colCount});
+        	}
+        	
 			ws.onerror = function(event) {
 				ws = null;
 			}

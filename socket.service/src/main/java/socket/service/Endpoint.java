@@ -8,6 +8,7 @@ public class Endpoint {
 	
 	@OnMessage
 	public String message(String message) {
+
 		return null;
 	}
 	
